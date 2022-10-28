@@ -1,16 +1,13 @@
-# weather_api
+# Weather app :cloud:
 
-A new Flutter project.
+Displaying weather data from api
 
-## Getting Started
+## Use 
+We can have the weather data which is taken from api (https://www.weatherapi.com)
+,We have weather condition in text 
+,We have celsius in numbers(bool)
+,We have fahrenheit in numbers(bool)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## User input 
+we have to input the city or country name 
+so that we can see the weather temp of that location
