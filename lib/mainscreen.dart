@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:weather_api/weather.dart';
 import 'package:weather_api/weather_service.dart';
@@ -16,16 +18,20 @@ class _MainScreenState extends State<MainScreen> {
   Weather weather = Weather();
   
   String currentWeather = '';
-  double tempC = 0;
-  double tempF = 0;
+  double temp = 0;
+  String icon = '';
+  String condition = '';
+  
+  
+  
   
   
   void getWeather() async {
     weather = await weatherService.getWeatherData(_textController.text);
     setState(() {
-      currentWeather = weather.condition;
-      tempF = weather.temperatureF;
-      tempC = weather.temperatureC;
+      condition = weather.condition;
+      temp = weather.temp;
+      icon = weather.icon;
     });
   }
   final _textController = TextEditingController();
@@ -33,79 +39,67 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        elevation: 40,
-        backgroundColor: Color.fromARGB(24, 23, 41, 102),  
-        title: Text('Weather  Temperature', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-        centerTitle: true,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(
-            bottom: Radius.circular(100),
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [Color.fromARGB(255, 60, 12, 172), Color.fromARGB(255, 113, 0, 133)],begin: Alignment.topCenter, end: Alignment.bottomCenter)
           ),
-        ),
-      ),
-
-      body: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.cyan[500]
-        ),
-        child: Padding(
-          padding: EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(height: 50,),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                      labelText: 'Type City/Country',
-                      border: OutlineInputBorder(
-                        borderRadius: const BorderRadius.all(Radius.circular(50.0))
-                      ),
-                      //hintText: 'Type city or country name',
-                      suffixIcon: IconButton(
-                        onPressed: () {_textController.clear();}, 
-                        icon: Icon(Icons.clear, color: Colors.white60,)
-                      )
-                    ),
+          child: Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 50,),
+                TextField(
+                  controller: _textController,
+                  style: TextStyle(color: Color.fromRGBO(255, 255, 255, 1)),
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Color.fromARGB(59, 255, 255, 255),
+                    border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular (25),
+                    borderSide: BorderSide.none,
+                    ), 
+                  hintText: "type city/country",
+                  prefixIcon: Icon(Icons.search),
+                  prefixIconColor: Color.fromARGB(183, 255, 254, 255),
                   ),
-                  ElevatedButton.icon(
-                    onPressed: () {setState(() {
-                        getWeather();
-                      
-                    });},
-                    icon: Icon(Icons.search),
-
-                    label: Text('Search'),
-                    style: ButtonStyle(
-
-
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          //side: BorderSide(color: Colors.red)
-                        )
+                ),
+                SizedBox(height: 20,),
+                ElevatedButton.icon(
+                      onPressed: () {setState(() {
+                          getWeather();
+                        
+                      });},
+                      icon: Icon(Icons.cloud),
+      
+                      label: Text('Search'),
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                            //side: BorderSide(color: Colors.red)
+                          )
+                        ),
+                        backgroundColor:  MaterialStateProperty.all<Color>(Color.fromARGB(109, 128, 62, 204))
                       ),
-                      backgroundColor:  MaterialStateProperty.all<Color>(Color.fromARGB(255, 74, 130, 177))
+      
                     ),
-
-                  ),
-
-                ],
-              ),
-              SizedBox(height: 50,),
-              
-              Text(currentWeather, style: TextStyle(color: Colors.blue[900], fontSize: 40,fontWeight: FontWeight.bold)),
-              Text('${tempC.toString()}  Celsius', style: TextStyle(fontSize: 30)),
-              Text('${tempF.toString()}  Fahrenheit', style: TextStyle(fontSize: 30)),
-              SizedBox(height:100),
-              Text('This data is taken from weatherapi.com',style: TextStyle(fontSize: 19))
-            ],
+      
+                  
+                
+                SizedBox(height: 50,),
+                Image.network(icon == ''? 'https://www.gstatic.com/youtube/src/web/htdocs/img/monkey.png':'https:$icon',
+                              fit: BoxFit.fill,height: 200,color: Colors.white.withOpacity(0.8), colorBlendMode: BlendMode.modulate,),
+                
+                Text(condition, style: TextStyle(color: Color.fromARGB(185, 255, 255, 255), fontSize: 40,fontWeight: FontWeight.bold)),
+                Text('$temp  Celsius', style: TextStyle(fontSize: 30,color: Color.fromARGB(185, 255, 255, 255))),
+                SizedBox(height:150),
+                Text('This data is taken from weatherapi.com',style: TextStyle(fontSize: 19, color: Colors.white30)),
+                SizedBox(height: 400,)
+              ],
+            ),
           ),
         ),
       ),
